@@ -1,12 +1,14 @@
 package com.example.appteste;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
         ContentValues cv = new ContentValues();
         cv.put("name", "teste");
-
-        ///DbHelper db = new DbHelper(getApplicationContext());
 
 
         fab = findViewById(R.id.floatingActionButton);
@@ -91,7 +91,35 @@ public class MainActivity extends AppCompatActivity {
 
                             @Override
                             public void onLongItemClick(View view, int position) {
-                                Log.i("ItemClick", "LongItemClick");
+
+                                Tarefa tf = tarefaList.get(position);
+
+                                AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                                dialog.setTitle("Confirmar exclusão!");
+                                dialog.setMessage("Deseja excluir essa tarefa?");
+                                dialog.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        DAOTarefa dao = new DAOTarefa(getApplicationContext());
+                                        if(dao.delete(tf)){
+                                            inicializarListTarefas();
+                                            Toast.makeText(getApplicationContext(), "Item deletado!", Toast.LENGTH_SHORT).show();
+                                        }else {
+                                            Toast.makeText(getApplicationContext(), "Nenhum item deletado!A", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+
+                                dialog.setNegativeButton("Não", null);
+                                dialog.create();
+                                dialog.show();
+//                                DAOTarefa dao = new DAOTarefa(getApplicationContext());
+//                                if(dao.delete(tf)){
+//                                    inicializarListTarefas();
+//                                    Toast.makeText(getApplicationContext(), "Item deletado!", Toast.LENGTH_SHORT).show();
+//                                }else {
+//                                    Toast.makeText(getApplicationContext(), "Nenhum item deletado!A", Toast.LENGTH_SHORT).show();
+//                                }
                             }
 
                             @Override

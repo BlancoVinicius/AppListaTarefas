@@ -38,7 +38,6 @@ public class DAOTarefa implements ITarefaDAO{
     @Override
     public boolean update(Tarefa tarefa) {
 
-        String sql = " * FROM " + DbHelper.TABELA_TAREFAS + " ;";
         ContentValues cv = new ContentValues();
         cv.put("name", tarefa.getName());
 
@@ -48,7 +47,13 @@ public class DAOTarefa implements ITarefaDAO{
 
     @Override
     public boolean delete(Tarefa tarefa) {
-        return false;
+
+        int linhasDeletadas = write.delete(DbHelper.TABELA_TAREFAS, "id=?", new String[]{tarefa.getId().toString()});
+        if(linhasDeletadas > 0){
+            return true;
+        }else {
+            return false;
+        }
     }
 
     @Override
